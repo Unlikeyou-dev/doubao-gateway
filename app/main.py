@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import sys
 import time
 import uuid
 from pathlib import Path
@@ -30,30 +29,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event("startup")
-async def startup_event() -> None:
-    settings = get_settings()
-    banner = (
-        "\n"
-        "=" * 60 + "\n"
-        "  Doubao Local Gateway 已启动\n"
-        "=" * 60 + "\n"
-        f"  API 地址: http://{settings.host}:{settings.port}/v1\n"
-        f"  API Key:  {settings.api_key}\n"
-        f"  模型名称: {settings.default_model}\n"
-        "-" * 60 + "\n"
-        "  IDE 配置步骤:\n"
-        "  1. 在 IDE 的 AI 模型配置中选择 '自定义配置'\n"
-        "  2. API 格式: OpenAI Chat Completions\n"
-        f"  3. 自定义请求地址: http://{settings.host}:{settings.port}/v1\n"
-        f"  4. 模型 ID: {settings.default_model}\n"
-        f"  5. API 密钥: {settings.api_key}\n"
-        "=" * 60 + "\n"
-    )
-    sys.stdout.write(banner)
-    sys.stdout.flush()
 
 _client: Optional[DoubaoClient] = None
 _sessions: Dict[str, ChatSessionState] = {}

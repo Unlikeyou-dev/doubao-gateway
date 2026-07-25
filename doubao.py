@@ -6,7 +6,26 @@ import os
 import sys
 import uvicorn
 
-from app.main import app
+from app.config import Settings  # noqa: F401
+
+
+def _print_banner(host: str, port: int) -> None:
+    settings = Settings()
+    print("", flush=True)
+    print("=" * 60, flush=True)
+    print("  Doubao Local Gateway 已启动", flush=True)
+    print("=" * 60, flush=True)
+    print(f"  API 地址: http://{host}:{port}/v1", flush=True)
+    print(f"  API Key:  {settings.api_key}", flush=True)
+    print(f"  模型名称: {settings.default_model}", flush=True)
+    print("-" * 60, flush=True)
+    print("  IDE 配置步骤:", flush=True)
+    print("  1. 在 IDE 的 AI 模型配置中选择 '自定义配置'", flush=True)
+    print("  2. API 格式: OpenAI Chat Completions", flush=True)
+    print(f"  3. 自定义请求地址: http://{host}:{port}/v1", flush=True)
+    print(f"  4. 模型 ID: {settings.default_model}", flush=True)
+    print(f"  5. API 密钥: {settings.api_key}", flush=True)
+    print("=" * 60, flush=True)
 
 
 def main() -> None:
@@ -34,6 +53,8 @@ def main() -> None:
         help="工作进程数 (default: 1)",
     )
     args = parser.parse_args()
+
+    _print_banner(args.host, args.port)
 
     uvicorn.run(
         "app.main:app",

@@ -14,3 +14,4 @@ test_output/
 *.swp
 *.swo
 *~
+.banner_shown
