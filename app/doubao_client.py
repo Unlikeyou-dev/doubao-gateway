@@ -413,6 +413,14 @@ class DoubaoClient:
                                 payload = json.loads(raw_data) if raw_data else {}
                             except Exception:
                                 pass
+                            
+                            if event_name == "STREAM_ERROR" and isinstance(payload, dict):
+                                error_code = str(payload.get("error_code") or "")
+                                if error_code == "710022004" or "limit" in (payload.get("error_msg") or "").lower():
+                                    self._mark_account_fail(account)
+                                    self._rotate_account()
+                                    break
+                            
                             item = {"event": event_name, "data": payload}
                             self._sync_state(item, state)
                             yield item
